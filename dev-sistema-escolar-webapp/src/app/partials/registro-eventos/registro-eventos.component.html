@@ -1,0 +1,118 @@
+<div class="wrapper">
+  <div class="section-registro">
+    <div class="body-registro">
+
+      <div class="alert alert-info text-center" *ngIf="!editar">
+        <strong>Registro de evento</strong>
+      </div>
+
+      <div class="alert alert-warning text-center" *ngIf="editar">
+        <strong>Edicion de evento</strong>
+      </div>
+      <div class="row mt-3 mb-3">
+        <div class="form-group col-12">
+          <label class="title-user" for="tipo_usuario">Ingresa los datos del evento</label>
+        </div>
+      </div>
+      <!--formulario -->
+      <mat-form-field class="mat-input" appearance="outline">
+        <mat-label>Nombre del evento</mat-label>
+        <input matInput [(ngModel)]="evento.nombre_evento" placeholder="Escribe el nombre del evento">
+      </mat-form-field>
+      <div *ngIf="errors.nombre_evento" class="invalid-feedback">{{ errors.nombre_evento }}</div>
+
+      <mat-form-field class="mat-input" appearance="outline">
+        <mat-label>Tipo de evento</mat-label>
+        <mat-select [(ngModel)]="evento.tipo_evento">
+          <mat-option value="conferencia">Conferencia</mat-option>
+          <mat-option value="taller">Taller</mat-option>
+          <mat-option value="seminario">Seminario</mat-option>
+          <mat-option value="concurso">Concurso</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div *ngIf="errors.tipo_evento" class="invalid-feedback">{{ errors.tipo_evento }}</div>
+
+      <mat-form-field class="mat-input" appearance="outline">
+        <mat-label>Fecha de realizacion</mat-label>
+        <input matInput [matDatepicker]="picker" [(ngModel)]="evento.fecha_realizacion" (focus)="picker.open()" placeholder="Agregar fecha" (dateChange)="changeFecha($event)" type="string">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <div *ngIf="errors.fecha_realizacion" class="invalid-feedback">{{ errors.fecha_realizacion }}</div>
+
+      <mat-form-field appearance="outline" class="mat-input">
+         <mat-label>Hora de inicio</mat-label>
+         <input matInput [ngxTimepicker]="pickerInicio" [(ngModel)]="evento.hora_inicio" name="horaInicio" readonly>
+         <ngx-material-timepicker-toggle matSuffix [for]="pickerInicio"></ngx-material-timepicker-toggle>
+         <ngx-material-timepicker #pickerInicio></ngx-material-timepicker>
+      </mat-form-field>
+      <div *ngIf="errors.hora_inicio" class="invalid-feedback">{{ errors.hora_inicio }}</div>
+
+
+      <mat-form-field appearance="outline" class="mat-input">
+          <mat-label>Hora de fin</mat-label>
+          <input matInput [ngxTimepicker]="pickerFin" [(ngModel)]="evento.hora_final" name="horaFin" readonly>
+          <ngx-material-timepicker-toggle matSuffix [for]="pickerFin"></ngx-material-timepicker-toggle>
+          <ngx-material-timepicker #pickerFin></ngx-material-timepicker>
+      </mat-form-field>
+       <div *ngIf="errors.hora_final" class="invalid-feedback">{{ errors.hora_final }}</div>
+
+      <mat-form-field class="mat-input" appearance="outline">
+        <mat-label>Lugar</mat-label>
+        <input matInput [(ngModel)]="evento.lugar" placeholder="Escribe el lugar">
+      </mat-form-field>
+      <div *ngIf="errors.lugar" class="invalid-feedback">{{ errors.lugar }}</div>
+
+      <label class="mat-label">Público objetivo</label>
+          <mat-radio-group [(ngModel)]="evento.publico_objetivo" class="checkbox-like">
+          <mat-radio-button value="estudiantes">Estudiantes</mat-radio-button>
+          <mat-radio-button value="maestros">Maestros</mat-radio-button>
+          <mat-radio-button value="general">Público General</mat-radio-button>
+         </mat-radio-group>
+      <div *ngIf="errors.publico_objetivo" class="invalid-feedback">{{ errors.publico_objetivo }}</div>
+
+
+      <mat-form-field class="mat-input" appearance="outline" *ngIf="evento.publico_objetivo === 'estudiantes'">
+        <mat-label>Programa educativo</mat-label>
+        <mat-select [(ngModel)]="evento.programa_educativo">
+         <mat-option *ngFor="let programa of programas" [value]="programa.viewValue">
+        {{programa.viewValue}}
+         </mat-option>
+        </mat-select>
+       </mat-form-field>
+       <div *ngIf="errors.programa_educativo" class="invalid-feedback">{{ errors.programa_educativo }}</div>
+
+
+      <mat-form-field class="mat-input" appearance="outline">
+         <mat-label>Responsable del evento</mat-label>
+         <mat-select [(ngModel)]="evento.responsable_id">
+         <mat-option *ngFor="let responsable of responsables"
+                [value]="responsable.id">
+         {{responsable.user.first_name}} {{responsable.user.last_name}}
+        </mat-option>
+        </mat-select>
+        </mat-form-field>
+        <div *ngIf="errors.responsable" class="invalid-feedback">{{ errors.responsable }}</div>
+
+      <mat-form-field class="mat-input" appearance="outline">
+        <mat-label>Descripción breve</mat-label>
+        <textarea matInput [(ngModel)]="evento.descripcion_breve" placeholder="Escribe una descripción breve" rows="3"></textarea>
+      </mat-form-field>
+      <div *ngIf="errors.descripcion_breve" class="invalid-feedback">{{ errors.descripcion_breve }}</div>
+      <br>
+
+      <mat-form-field class="mat-input" appearance="outline">
+        <mat-label>Cupo máximo de asistentes</mat-label>
+        <input matInput [(ngModel)]="evento.cupo_maximo" type="number" placeholder="Escribe el cupo máximo">
+      </mat-form-field>
+      <div *ngIf="errors.cupo_maximo" class="invalid-feedback">{{ errors.cupo_maximo }}</div>
+
+      <!-- En esta clase se definen los botones para guardar o actualizar el registro -->
+      <div class="section-buttons">
+        <button class="btn btn-danger" (click)="regresar()">Cancelar</button>
+        <button *ngIf="!editar" class="btn btn-primary" type="submit" (click)="registrar()">Registrar</button>
+        <button *ngIf="editar" class="btn btn-primary" type="submit" (click)="abrirModalConfirmacion()">Actualizar</button>
+      </div>
+    </div>
+  </div>
+</div>
