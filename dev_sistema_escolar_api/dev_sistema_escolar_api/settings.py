@@ -45,7 +45,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200',
     'https://sistema-escolar-produccion.onrender.com',
-    'https://sistema-escolar-fullstack.vercel.app'
+    'https://sistema-escolar-produccion-b3eu.vercel.app/'
 ]
 CORS_ALLOW_CREDENTIALS = True
 
