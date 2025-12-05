@@ -44,32 +44,29 @@ export class EventosService {
     console.log("Validando evento... ", data);
     let error: any = {};
 
-    if(!this.validatorService.required(data["nombre_evento"])){
-      error["nombre_evento"] = this.errorService.required;
-    }else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ0-9 ]+$/.test(data["nombre_evento"])) {
-    error["nombre_evento"] = "Solo se permiten letras, números y espacios.";
-   }else {
-    // Validar formato YYYY-MM-DD (del DatePicker)
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(data["fecha_realizacion"])) {
-      error["fecha_realizacion"] = "Formato de fecha inválido.";
-    } else {
-      const fechaIngresada = new Date(data["fecha_realizacion"]);
-      const hoy = new Date();
-      hoy.setHours(0, 0, 0, 0);
 
-      if (fechaIngresada < hoy) {
-        error["fecha_realizacion"] = "No puedes seleccionar una fecha anterior al día actual.";
-      }
-    }
-  }
+    if(!this.validatorService.required(data["nombre_evento"])){
+      error["nombre_evento"] = this.errorService.required;
+    } else if (!this.validatorService.alphanumericAndSpaces(data["nombre_evento"])) {
+      error["nombre_evento"] = "Solo se permiten letras, números y espacios.";
+    }
 
+
+    if(!this.validatorService.required(data["tipo_evento"])){
+      error["tipo_evento"] = this.errorService.required;
+    }
+
+
+    if(!this.validatorService.required(data["fecha_realizacion"])){
+      error["fecha_realizacion"] = this.errorService.required;
+    } else if (!this.validatorService.date(data["fecha_realizacion"])) {
+        error["fecha_realizacion"] = "Formato de fecha inválido (Debe ser YYYY-MM-DD).";
+    } else if (!this.validatorService.isFutureDate(data["fecha_realizacion"])) {
+      error["fecha_realizacion"] = "No puedes seleccionar una fecha anterior al día actual.";
+    }
 
     if(!this.validatorService.required(data["tipo_evento"])){
       error["tipo_evento"] = this.errorService.required;
-    }
-
-    if(!this.validatorService.required(data["fecha_realizacion"])){
-      error["fecha_realizacion"] = this.errorService.required;
     }
 
     // =====================
@@ -99,33 +96,32 @@ if (data["hora_inicio"] && data["hora_final"]) {
 }
 
 
-    if(!this.validatorService.required(data["lugar"])){
-      error["lugar"] = this.errorService.required;
-    }else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ0-9 ]+$/.test(data["lugar"])) {
-    error["lugar"] = "Solo se permiten letras, números y espacios.";
-    }
+   if(!this.validatorService.required(data["lugar"])){
+      error["lugar"] = this.errorService.required;
+    } else if (!this.validatorService.alphanumericAndSpaces(data["lugar"])) {
+      error["lugar"] = "Solo se permiten letras, números y espacios.";
+    }
 
     if(!this.validatorService.required(data["publico_objetivo"])){
       error["publico_objetivo"] = this.errorService.required;
     }
 
     if(!this.validatorService.required(data["descripcion_breve"])){
-      error["descripcion_breve"] = this.errorService.required;
-    }else {
-     if (data["descripcion_breve"].length > 300) {
-       error["descripcion_breve"] = "Máximo 300 caracteres.";
-     }
-     if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ0-9 .,;:!?()"\-]+$/.test(data["descripcion_breve"])) {
-       error["descripcion_breve"] =
-        "Solo se permiten letras, números y signos de puntuación básicos.";
-     }
-    }
+      error["descripcion_breve"] = this.errorService.required;
+    } else {
+      if (!this.validatorService.max(data["descripcion_breve"], 300)) { // Reutiliza 'max' existente
+        error["descripcion_breve"] = "Máximo 300 caracteres.";
+      }
+      if (!this.validatorService.alphanumericPunctuation(data["descripcion_breve"])) {
+        error["descripcion_breve"] = "Solo se permiten letras, números y signos de puntuación básicos.";
+      }
+    }
 
     if(!this.validatorService.required(data["cupo_maximo"])){
-      error["cupo_maximo"] = this.errorService.required;
-    }else if (!/^[0-9]{1,3}$/.test(data["cupo_maximo"])) {
-      error["cupo_maximo"] = "Debe ser un número entero positivo de máximo 3 dígitos.";
-    }
+      error["cupo_maximo"] = this.errorService.required;
+    } else if (!this.validatorService.maxThreeDigitPositiveInteger(data["cupo_maximo"])) {
+      error["cupo_maximo"] = "Debe ser un número entero positivo de máximo 3 dígitos.";
+    }
 
     return error;
   }

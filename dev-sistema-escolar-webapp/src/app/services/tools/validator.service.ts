@@ -76,4 +76,68 @@ export class ValidatorService {
     console.log(pat.test(input), input);
     return pat.test(input);
   }
+
+  //agregado
+
+  alphanumeric(input:any): boolean{
+    // Permite letras (mayúsculas/minúsculas) y números SIN espacios.
+    let pat = new RegExp('^([A-Za-z0-9]+)$');
+    return pat.test(input);
+  }
+
+onlyLetters(input:any): boolean{
+    // Expresión regular para letras, acentos, ñ/Ñ y espacios.
+    let pat = new RegExp('^([A-Za-zÑñáéíóúÁÉÍÓÚ ]+)$');
+    return pat.test(input);
+  }
+
+minAge(input: any, age: number): boolean {
+      if (!this.date(input)) {
+          return false;
+      }
+
+      const birthDate = new Date(input);
+      const today = new Date();
+
+      if (birthDate.getTime() > today.getTime()) {
+          return false;
+    }
+
+    let limitDate = new Date(today.getFullYear() - age, today.getMonth(), today.getDate());
+
+    return birthDate.getTime() <= limitDate.getTime();
+  }
+  //pal eventos
+  // Valida si un texto contiene solo letras, números y espacios
+    alphanumericAndSpaces(input: any): boolean {
+        let pat = new RegExp(/^[A-Za-zÁÉÍÓÚáéíóúñÑ0-9 ]+$/);
+        return pat.test(input);
+    }
+
+    // Valida si un texto contiene letras, números, espacios y signos de puntuación básicos
+    alphanumericPunctuation(input: any): boolean {
+        let pat = new RegExp(/^[A-Za-zÁÉÍÓÚáéíóúñÑ0-9 .,;:!?()"\-]+$/);
+        return pat.test(input);
+    }
+
+    // Valida que el campo sea un número entero de 1 a 3 dígitos
+    maxThreeDigitPositiveInteger(input: any): boolean {
+        let pat = new RegExp(/^[0-9]{1,3}$/);
+        return pat.test(input);
+    }
+
+    // Valida que la fecha tenga el formato YYYY-MM-DD y no sea una fecha pasada
+    isFutureDate(dateString: string): boolean {
+        // Primero validar el formato (usa la función 'date' existente)
+        if (!this.date(dateString)) return false;
+
+        const fechaIngresada = new Date(dateString);
+        const hoy = new Date();
+        // Setear hora a 0 para comparar solo la fecha
+        hoy.setHours(0, 0, 0, 0);
+
+        // La fecha debe ser igual o posterior a hoy
+        return fechaIngresada.getTime() >= hoy.getTime();
+    }
+
 }

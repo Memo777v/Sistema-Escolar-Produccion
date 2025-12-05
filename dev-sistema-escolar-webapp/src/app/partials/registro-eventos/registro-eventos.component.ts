@@ -157,7 +157,7 @@ ngOnInit(): void {
 
     console.log("Datos ANTES de convertir:", this.evento);
 
-    //Preparar datos para enviar - IMPORTANTE: Crear una copia
+    //Preparar datos para enviar
     const eventoActualizado = {
       ...this.evento,
       id: this.idEvento,
@@ -178,7 +178,6 @@ ngOnInit(): void {
       (error) => {
         alert("Error al actualizar evento");
         console.error("Error al actualizar evento: ", error);
-        // ✅ IMPORTANTE: Imprimir los detalles del error
         if (error.error) {
           console.error("Detalles del error:", error.error);
         }

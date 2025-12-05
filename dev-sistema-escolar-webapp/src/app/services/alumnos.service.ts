@@ -47,14 +47,21 @@ export class AlumnosService {
 
     if(!this.validatorService.required(data["matricula"])){
       error["matricula"] = this.errorService.required;
+    }else if(!this.validatorService.numeric(data["matricula"])) {
+      // Usamos numeric, ya que es la validación para solo números
+      error["matricula"] = "La matrícula solo debe contener números.";
     }
 
     if(!this.validatorService.required(data["first_name"])){
       error["first_name"] = this.errorService.required;
+    }else if(!this.validatorService.onlyLetters(data["first_name"])) {
+      error["first_name"] = "El nombre solo debe contener letras.";
     }
 
     if(!this.validatorService.required(data["last_name"])){
       error["last_name"] = this.errorService.required;
+    }else if(!this.validatorService.onlyLetters(data["last_name"])) {
+      error["last_name"] = "Los apellidos solo deben contener letras.";
     }
 
     if(!this.validatorService.required(data["email"])){
@@ -77,6 +84,8 @@ export class AlumnosService {
 
     if(!this.validatorService.required(data["fecha_nacimiento"])){
       error["fecha_nacimiento"] = this.errorService.required;
+    }else if(!this.validatorService.minAge(data["fecha_nacimiento"], 18)) {
+      error["fecha_nacimiento"] = "Debes tener al menos 18 años y la fecha no puede ser futura.";
     }
 
     if(!this.validatorService.required(data["curp"])){

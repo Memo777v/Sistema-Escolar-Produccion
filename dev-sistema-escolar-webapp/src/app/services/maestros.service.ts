@@ -47,14 +47,20 @@ export class MaestrosService {
 
     if(!this.validatorService.required(data["id_trabajador"])){
       error["id_trabajador"] = this.errorService.required;
+    }else if(!this.validatorService.alphanumeric(data["id_trabajador"])) {
+      error["id_trabajador"] = "El ID de trabajador solo debe contener letras y números.";
     }
 
     if(!this.validatorService.required(data["first_name"])){
       error["first_name"] = this.errorService.required;
+    }else if(!this.validatorService.onlyLetters(data["first_name"])) {
+      error["first_name"] = "El nombre solo debe contener letras.";
     }
 
     if(!this.validatorService.required(data["last_name"])){
       error["last_name"] = this.errorService.required;
+    }else if(!this.validatorService.onlyLetters(data["last_name"])) {
+      error["last_name"] = "Los apellidos solo deben contener letras.";
     }
 
     if(!this.validatorService.required(data["email"])){
@@ -77,6 +83,8 @@ export class MaestrosService {
 
     if(!this.validatorService.required(data["fecha_nacimiento"])){
       error["fecha_nacimiento"] = this.errorService.required;
+    }else if(!this.validatorService.minAge(data["fecha_nacimiento"], 18)) {
+      error["fecha_nacimiento"] = "Debes tener al menos 18 años y la fecha no puede ser futura.";
     }
 
     if(!this.validatorService.required(data["rfc"])){
